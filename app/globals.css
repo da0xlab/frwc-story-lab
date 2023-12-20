@@ -1,6 +1,8 @@
 
-body {
+html, body {
   background: black;
+  font-family: monospace;
+  font-size: 1.1em;
 }
 
 @media (prefers-color-scheme: dark) {

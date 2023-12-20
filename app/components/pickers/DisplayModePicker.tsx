@@ -1,7 +1,7 @@
 import {
   GalleryDisplayMode,
   useGalleryContext,
-} from "../contexts/GalleryContext";
+} from "../../contexts/GalleryContext";
 import styled from "styled-components";
 
 function DisplayModePicker() {

@@ -1,33 +1,29 @@
 import { NftContractForNft } from "alchemy-sdk";
-import { useGalleryContext } from "../contexts/GalleryContext";
+import { useGalleryContext } from "../../contexts/GalleryContext";
 import styled from "styled-components";
 
-function NFTCollectionPicker({
-  ownedCollections,
-}: {
-  ownedCollections: NftContractForNft[];
-}) {
-  const { collections, setCollections } = useGalleryContext();
+function NFTCollectionPicker() {
+  const { ownedCollections: collections, selectedCollections: selectedCollections, setSelectedCollections: setSelectedCollections } = useGalleryContext();
 
   function handleOnChange(collection: NftContractForNft) {
-    if (collections.includes(collection.address)) {
-      setCollections(collections.filter((c) => c !== collection.address));
+    if (selectedCollections.includes(collection.address)) {
+      setSelectedCollections(selectedCollections.filter((c) => c !== collection.address));
     } else {
-      setCollections([...collections, collection.address]);
+      setSelectedCollections([...selectedCollections, collection.address]);
     }
   }
 
   return (
     <Container>
       <h3>Collections:</h3>
-      {ownedCollections.map((c) => {
+      {collections.map((c) => {
         const id = c.openSeaMetadata.collectionName ?? c.name ?? c.address;
         return (
           <label key={c.address}>
             <input
               type="checkbox"
               id={id}
-              checked={collections.includes(c.address)}
+              checked={selectedCollections.includes(c.address)}
               onChange={() => {
                 handleOnChange(c);
               }}

@@ -1,4 +1,4 @@
-import { useGalleryContext } from "../contexts/GalleryContext";
+import { useGalleryContext } from "../../contexts/GalleryContext";
 import styled from "styled-components";
 
 function ItemSizePicker() {
