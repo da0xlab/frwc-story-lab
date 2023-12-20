@@ -3,11 +3,17 @@ import { useGalleryContext } from "../../contexts/GalleryContext";
 import styled from "styled-components";
 
 function NFTCollectionPicker() {
-  const { ownedCollections: collections, selectedCollections: selectedCollections, setSelectedCollections: setSelectedCollections } = useGalleryContext();
+  const {
+    ownedCollections,
+    selectedCollections,
+    setSelectedCollections: setSelectedCollections,
+  } = useGalleryContext();
 
   function handleOnChange(collection: NftContractForNft) {
     if (selectedCollections.includes(collection.address)) {
-      setSelectedCollections(selectedCollections.filter((c) => c !== collection.address));
+      setSelectedCollections(
+        selectedCollections.filter((c) => c !== collection.address)
+      );
     } else {
       setSelectedCollections([...selectedCollections, collection.address]);
     }
@@ -16,7 +22,7 @@ function NFTCollectionPicker() {
   return (
     <Container>
       <h3>Collections:</h3>
-      {collections.map((c) => {
+      {ownedCollections.map((c) => {
         const id = c.openSeaMetadata.collectionName ?? c.name ?? c.address;
         return (
           <label key={c.address}>
@@ -28,14 +34,6 @@ function NFTCollectionPicker() {
                 handleOnChange(c);
               }}
             />
-            {/* {c.openSeaMetadata.imageUrl && (
-              <img
-                src={c.openSeaMetadata.imageUrl}
-                width={40}
-                height={40}
-                alt={id}
-              />
-            )} */}
             {id}
           </label>
         );

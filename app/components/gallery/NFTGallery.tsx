@@ -15,16 +15,6 @@ function NFTGallery() {
     selectedCollections,
   } = useGalleryContext();
 
-  // TODO: Vars and sorting
-  // Sort collections by preferred order
-  // const sortedCollections = Object.entries(tokens)
-  // .sort(
-  //   (a, b) =>
-  //     defaultCollections.indexOf(b[0]) - defaultCollections.indexOf(a[0])
-  // )
-  // .filter((t) => selectedCollectionAddresses.includes(t[0]));
-
-  // console.log(sortedCollections);
   const tokensToDisplay = Object.values(ownedNFTs)
     .flat()
     .filter(

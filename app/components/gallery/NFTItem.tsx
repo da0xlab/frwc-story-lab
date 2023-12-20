@@ -25,6 +25,4 @@ const ItemIcon = styled.img<{ $itemWidth: number | undefined }>`
 
   object-fit: contain;
   image-rendering: pixelated;
-
-  /* border-radius: 0.75em; */
 `;

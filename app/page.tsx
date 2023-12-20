@@ -10,12 +10,13 @@ import useOwnedNFTs, { defaultCollections } from "./hooks/useOwnedNFTs";
 import PickersPanel from "./components/pickers/PickersPanel";
 import { NftContractForNft } from "alchemy-sdk";
 import NFTGallery from "./components/gallery/NFTGallery";
+import WalletsPicker from "./components/pickers/WalletsPicker";
 
 const defaultItemWidth = "200";
 
 const defaultWallets: string[] = [
-  "0x73eFDa13bC0d0717b4f2f36418279FD4E2Cd0Af9",
-  "0x0e2CE9123ef30142f8ef8365ea2CBea06596E482",
+  // "0x73eFDa13bC0d0717b4f2f36418279FD4E2Cd0Af9",
+  // "0x0e2CE9123ef30142f8ef8365ea2CBea06596E482",
 ];
 
 export default function Index() {
@@ -33,10 +34,10 @@ export default function Index() {
     walletAddrs = defaultWallets;
   }
   // Collection(s)
-  let collectionAddrs = searchParams.getAll("collection");
-  if (collectionAddrs.length === 0) {
-    collectionAddrs = defaultCollections;
-  }
+  // let collectionAddrs = searchParams.getAll("collection");
+  // if (collectionAddrs.length === 0) {
+  //   collectionAddrs = defaultCollections;
+  // }
 
   // Display mode
   const [selectedDisplayMode, setDisplayMode] = useState(display);
@@ -45,8 +46,7 @@ export default function Index() {
   // Selected wallets to display
   const [selectedWallets, setSelectedWallets] = useState(walletAddrs);
   // Selected collections to display
-  const [selectedCollections, setSelectedCollections] =
-    useState(collectionAddrs);
+  const [selectedCollections, setSelectedCollections] = useState<string[]>([]);
   // Item size in gallery
   const [itemSize, setItemSize] = useState(width);
   // Collections owned by all wallets
@@ -55,18 +55,23 @@ export default function Index() {
   );
 
   // Fetch portfolio
-  const { tokens, isLoading } = useOwnedNFTs(wallets, collectionAddrs);
+  const { tokens, isLoading } = useOwnedNFTs(wallets, defaultCollections);
 
   useEffect(() => {
     const ownedCollections = Object.values(tokens)
       .flatMap((t) => (t[0].contract ? t[0].contract : []))
       .sort((a, b) =>
-        defaultCollections.map(a => a.toLowerCase()).indexOf(a.address.toLowerCase()) >
-        defaultCollections.map(a => a.toLowerCase()).indexOf(b.address.toLowerCase())
+        defaultCollections
+          .map((a) => a.toLowerCase())
+          .indexOf(a.address.toLowerCase()) >
+        defaultCollections
+          .map((a) => a.toLowerCase())
+          .indexOf(b.address.toLowerCase())
           ? 1
           : -1
       );
     setOwnedCollections(ownedCollections);
+    setSelectedCollections(ownedCollections.map((c) => c.address));
   }, [tokens]);
 
   if (isLoading) {
