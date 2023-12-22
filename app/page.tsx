@@ -10,7 +10,6 @@ import useOwnedNFTs, { defaultCollections } from "./hooks/useOwnedNFTs";
 import PickersPanel from "./components/pickers/PickersPanel";
 import { NftContractForNft } from "alchemy-sdk";
 import NFTGallery from "./components/gallery/NFTGallery";
-import WalletsPicker from "./components/pickers/WalletsPicker";
 
 const defaultItemWidth = "200";
 
@@ -53,6 +52,8 @@ export default function Index() {
   const [ownedCollections, setOwnedCollections] = useState<NftContractForNft[]>(
     []
   );
+  // Pickers Panel visibility, visible on load if no wallet(s)
+  const [panelVisible, setPanelVisible] = useState(wallets.length === 0);
 
   // Fetch portfolio
   const { tokens, isLoading } = useOwnedNFTs(wallets, defaultCollections);
@@ -100,7 +101,10 @@ export default function Index() {
       }}
     >
       <Container>
-        <PickersPanel />
+        <SettingsButton onClick={() => setPanelVisible(!panelVisible)}>
+          {panelVisible ? "hide" : "show"} settings
+        </SettingsButton>
+        {panelVisible && <PickersPanel />}
         <NFTGallery />
       </Container>
     </GalleryContext.Provider>
@@ -118,4 +122,8 @@ const Container = styled.div`
 
   width: 100%;
   height: 100%;
+`;
+
+const SettingsButton = styled.button`
+  margin-left: 1em;
 `;

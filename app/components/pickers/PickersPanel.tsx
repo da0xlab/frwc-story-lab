@@ -26,7 +26,7 @@ const Container = styled.div`
   align-items: stretch;
   justify-content: stretch;
 
-  background-color: #33333333;
+  background-color: #000000cc;
   color: #fff;
 
   width: 100%;
