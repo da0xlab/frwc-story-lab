@@ -22,6 +22,12 @@ export const defaultCollections = [
 ];
 
 export type NFT = OwnedNft & { owner: string };
+export type Attribute = { trait_type: string; value: string };
+export type NFTMetaData = {
+  name: string;
+  image: string;
+  attributes: Attribute[];
+};
 export type NFTsByContract = Record<string, NFT[]>;
 
 const config = {
@@ -37,14 +43,24 @@ async function fetchTokensByContract(
   // Get tokens for each wallet, and sort by contract
   let tokensByContract: NFTsByContract = {};
   for (var wallet of wallets) {
-    const nfts = await alchemy.nft.getNftsForOwner(wallet, {
+    let allNFTs: OwnedNft[] = [];
+    let nfts = await alchemy.nft.getNftsForOwner(wallet, {
       contractAddresses,
     });
-    nfts.ownedNfts.forEach((nft) => {
+    allNFTs.push(...nfts.ownedNfts);
+    while (nfts.pageKey) {
+      nfts = await alchemy.nft.getNftsForOwner(wallet, {
+        contractAddresses,
+        pageKey: nfts.pageKey,
+      });
+      allNFTs.push(...nfts.ownedNfts);
+    }
+    allNFTs.forEach((nft) => {
+      const ownedNFT = { ...nft, owner: wallet };
       if (tokensByContract[nft.contract.address]) {
-        tokensByContract[nft.contract.address].push({ ...nft, owner: wallet });
+        tokensByContract[nft.contract.address].push(ownedNFT);
       } else {
-        tokensByContract[nft.contract.address] = [{ ...nft, owner: wallet }];
+        tokensByContract[nft.contract.address] = [ownedNFT];
       }
     });
   }

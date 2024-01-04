@@ -5,6 +5,8 @@ import {
 } from "../../contexts/GalleryContext";
 import NFTCollection from "./NFTCollection";
 import NFTSlideShow from "./NFTSlideshow";
+import styled from "styled-components";
+import PickersPanel from "../pickers/PickersPanel";
 
 function NFTGallery() {
   const {
@@ -13,6 +15,9 @@ function NFTGallery() {
     itemSize,
     selectedWallets,
     selectedCollections,
+    settingsVisible,
+    setSettingsVisible,
+    showCollectionTitles,
   } = useGalleryContext();
 
   const tokensToDisplay = Object.values(ownedNFTs)
@@ -35,16 +40,27 @@ function NFTGallery() {
 
   return (
     <>
+      {displayMode !== GalleryDisplayMode.Slideshow && (
+        <SettingsButton onClick={() => setSettingsVisible(!settingsVisible)}>
+          {settingsVisible ? "Hide" : "Show"} Settings
+        </SettingsButton>
+      )}
+      {settingsVisible && <PickersPanel />}
+
       {displayMode === GalleryDisplayMode.Combined && (
         <NFTCollection nfts={tokensToDisplay} itemWidth={itemSize} />
       )}
       {displayMode === GalleryDisplayMode.ByCollection &&
         selectedCollections.map((collectionAddress) => {
+          const tokens = tokensToDisplay.filter(
+            (nft) => nft.contract.address === collectionAddress
+          );
           return (
             <NFTCollection
-              nfts={tokensToDisplay.filter(
-                (nft) => nft.contract.address === collectionAddress
-              )}
+              title={
+                showCollectionTitles ? tokens[0]?.collection?.name : undefined
+              }
+              nfts={tokens}
               key={collectionAddress}
               itemWidth={itemSize}
             />
@@ -56,5 +72,10 @@ function NFTGallery() {
     </>
   );
 }
+
+const SettingsButton = styled.button`
+  margin-left: 1em;
+  z-index: 2;
+`;
 
 export default NFTGallery;

@@ -1,4 +1,3 @@
-import { NftContractForNft } from "alchemy-sdk";
 import styled from "styled-components";
 import DisplayModePicker from "./DisplayModePicker";
 import ItemSizePicker from "./ItemSizePicker";
@@ -26,14 +25,18 @@ const Container = styled.div`
   align-items: stretch;
   justify-content: stretch;
 
-  background-color: #000000cc;
+  background-color: #000000bb;
   color: #fff;
+
+  backdrop-filter: blur(8px);
 
   width: 100%;
   padding: 1em;
   gap: 2em;
 
   flex-wrap: wrap;
+
+  position: fixed;
 `;
 
 const HStack = styled.div`

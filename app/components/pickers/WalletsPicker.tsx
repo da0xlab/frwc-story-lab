@@ -2,16 +2,25 @@ import { NftContractForNft } from "alchemy-sdk";
 import { useGalleryContext } from "../../contexts/GalleryContext";
 import styled from "styled-components";
 import { useState } from "react";
+import useSavedWallets from "@/app/hooks/useSavedWallets";
 
 function WalletsPicker() {
-  const { selectedWallets: wallets, allWallets, setSelectedWallets: setWallets } = useGalleryContext();
+  const { selectedWallets, setSelectedWallets, allWallets, setAllWallets } =
+    useGalleryContext();
+  const { removeWallet } = useSavedWallets();
 
   function handleOnChange(address: string) {
-    if (wallets.includes(address)) {
-      setWallets(wallets.filter((a) => a !== address));
+    if (selectedWallets.includes(address)) {
+      setSelectedWallets(selectedWallets.filter((a) => a !== address));
     } else {
-      setWallets([...wallets, address]);
+      setSelectedWallets([...selectedWallets, address]);
     }
+  }
+
+  function handleRemove(address: string) {
+    setSelectedWallets(selectedWallets.filter((a) => a !== address));
+    setAllWallets(allWallets.filter((a) => a !== address));
+    removeWallet(address);
   }
 
   return (
@@ -22,12 +31,19 @@ function WalletsPicker() {
           <label key={a}>
             <input
               type="checkbox"
-              checked={wallets.includes(a)}
+              checked={selectedWallets.includes(a)}
               onChange={() => {
                 handleOnChange(a);
               }}
             />
             {a}
+            <button
+              onClick={() => {
+                handleRemove(a);
+              }}
+            >
+              remove
+            </button>
           </label>
         );
       })}
@@ -46,7 +62,9 @@ const Container = styled.div`
 `;
 
 const AddressInput = () => {
-  const { allWallets, setAllWallets, selectedWallets: wallets, setSelectedWallets: setWallets } = useGalleryContext();
+  const { allWallets, setAllWallets, selectedWallets, setSelectedWallets } =
+    useGalleryContext();
+  const { saveWallet } = useSavedWallets();
 
   const [address, setAddress] = useState("");
   const [validAddress, setValidAddress] = useState(false);
@@ -59,8 +77,10 @@ const AddressInput = () => {
   }
 
   function addAddress() {
-    setAllWallets([...allWallets, address]);
-    setWallets([...wallets, address]);
+    const safeAddr = address.trimEnd();    
+    saveWallet(safeAddr);
+    setAllWallets([...allWallets, safeAddr]);
+    setSelectedWallets([...selectedWallets, safeAddr]);
   }
 
   return (
@@ -83,4 +103,4 @@ const AddressInput = () => {
 
 export const TextInput = styled.input`
   width: 100%;
- `;
+`;

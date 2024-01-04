@@ -1,10 +1,15 @@
+@font-face {
+  font-family: "alagard";
+  src: url("/fonts/alagard.ttf");
+}
+
 * {
-  font-family: monospace !important;
+  font-family: alagard !important;
 }
 
 html, body {
   background: black;
-  font-size: 1.1em;
+  font-size: 1.2em;
 }
 
 

@@ -25,6 +25,12 @@ type GalleryContextType = {
 
   itemSize: number;
   setItemSize: (size: number) => void;
+
+  settingsVisible: boolean;
+  setSettingsVisible: (visible: boolean) => void;
+
+  showCollectionTitles: boolean;
+  setShowCollectionTitles: (show: boolean) => void;
 };
 
 export const GalleryContext = createContext<GalleryContextType | undefined>(

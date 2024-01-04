@@ -5,10 +5,13 @@ import {
 import styled from "styled-components";
 
 function DisplayModePicker() {
-  const { displayMode, setDisplayMode } = useGalleryContext();
+  const { displayMode, setDisplayMode, setSettingsVisible } = useGalleryContext();
 
   function handleOnChange(displayMode: GalleryDisplayMode) {
     setDisplayMode(displayMode);
+    if(displayMode === GalleryDisplayMode.Slideshow) {
+      setSettingsVisible(false);
+    }
   }
 
   return (

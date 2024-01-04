@@ -1,16 +1,19 @@
-import { OwnedNft } from "alchemy-sdk";
 import styled from "styled-components";
 import NFTItem from "./NFTItem";
+import { NFT } from "@/app/hooks/useOwnedNFTs";
 
 const NFTCollection = ({
   itemWidth,
   nfts,
+  title,
 }: {
   itemWidth: number;
-  nfts: OwnedNft[];
+  nfts: NFT[];
+  title?: string;
 }) => {
   return (
-    <>
+    <Container>
+      {title && <Title>{title}</Title>}
       {nfts.length > 0 && (
         <Grid>
           {nfts?.map((t) => {
@@ -24,11 +27,21 @@ const NFTCollection = ({
           })}
         </Grid>
       )}
-    </>
+    </Container>
   );
 };
 
 export default NFTCollection;
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  justify-content: start;
+  padding: 1em;
+`;
+
+const Title = styled.h4``;
 
 const Grid = styled.div`
   display: flex;
@@ -37,5 +50,4 @@ const Grid = styled.div`
   justify-content: start;
   flex-wrap: wrap;
   gap: 0.5em;
-  padding: 1em;
 `;

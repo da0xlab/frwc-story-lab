@@ -16,6 +16,7 @@ function ItemSizePicker() {
           type="range"
           min={10}
           max={500}
+          step={10}
           value={itemSize}
           onChange={handleOnChange}
         />

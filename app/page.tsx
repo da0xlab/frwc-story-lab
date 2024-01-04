@@ -6,17 +6,15 @@ import { useSearchParams } from "next/navigation";
 import styled from "styled-components";
 
 import { GalleryContext, GalleryDisplayMode } from "./contexts/GalleryContext";
-import useOwnedNFTs, { defaultCollections } from "./hooks/useOwnedNFTs";
+import useOwnedNFTs, { NFT, defaultCollections } from "./hooks/useOwnedNFTs";
 import PickersPanel from "./components/pickers/PickersPanel";
 import { NftContractForNft } from "alchemy-sdk";
 import NFTGallery from "./components/gallery/NFTGallery";
+import { ModalContext } from "./contexts/ModalContext";
+import NFTItemModal from "./components/modal/NFTItemModal";
+import useSavedWallets from "./hooks/useSavedWallets";
 
 const defaultItemWidth = "200";
-
-const defaultWallets: string[] = [
-  // "0x73eFDa13bC0d0717b4f2f36418279FD4E2Cd0Af9",
-  // "0x0e2CE9123ef30142f8ef8365ea2CBea06596E482",
-];
 
 export default function Index() {
   // Get query params
@@ -30,37 +28,48 @@ export default function Index() {
   // Wallet(s)
   let walletAddrs = searchParams.getAll("wallet");
   if (walletAddrs.length === 0) {
-    walletAddrs = defaultWallets;
+    walletAddrs = [];
   }
-  // Collection(s)
-  // let collectionAddrs = searchParams.getAll("collection");
-  // if (collectionAddrs.length === 0) {
-  //   collectionAddrs = defaultCollections;
-  // }
+
+  // Load saved wallets
+  const { savedWallets } = useSavedWallets();
 
   // Display mode
   const [selectedDisplayMode, setDisplayMode] = useState(display);
   // All wallets
-  const [wallets, setWallets] = useState(walletAddrs);
+  const [allWallets, setAllWallets] = useState<string[]>([]);
   // Selected wallets to display
-  const [selectedWallets, setSelectedWallets] = useState(walletAddrs);
+  const [selectedWallets, setSelectedWallets] = useState<string[]>([]);
   // Selected collections to display
   const [selectedCollections, setSelectedCollections] = useState<string[]>([]);
   // Item size in gallery
   const [itemSize, setItemSize] = useState(width);
+  // Collection titles
+  const [showCollectionTitles, setShowCollectionTitles] = useState(false);
+  // Pickers Panel visibility, visible on load if no wallet(s)
+  const [settingsVisible, setSettingsVisible] = useState(
+    selectedWallets.length === 0
+  );
+  // Item Modal
+  const [modalItem, setModalItem] = useState<NFT | undefined>(undefined);
   // Collections owned by all wallets
   const [ownedCollections, setOwnedCollections] = useState<NftContractForNft[]>(
     []
   );
-  // Pickers Panel visibility, visible on load if no wallet(s)
-  const [panelVisible, setPanelVisible] = useState(wallets.length === 0);
+
+  // Handle when we get saved wallets from local storage
+  useEffect(() => {
+    setAllWallets([...walletAddrs, ...savedWallets]);
+  }, [savedWallets]);
 
   // Fetch portfolio
-  const { tokens, isLoading } = useOwnedNFTs(wallets, defaultCollections);
+  const { tokens, isLoading } = useOwnedNFTs(allWallets, defaultCollections);
 
+  // Process owned NFTs
   useEffect(() => {
     const ownedCollections = Object.values(tokens)
       .flatMap((t) => (t[0].contract ? t[0].contract : []))
+      // Sort by preferred collection order
       .sort((a, b) =>
         defaultCollections
           .map((a) => a.toLowerCase())
@@ -90,23 +99,26 @@ export default function Index() {
         setDisplayMode,
         selectedWallets,
         setSelectedWallets,
-        allWallets: wallets,
-        setAllWallets: setWallets,
+        allWallets,
+        setAllWallets,
         selectedCollections,
         setSelectedCollections,
         ownedCollections,
         ownedNFTs: tokens,
         itemSize,
         setItemSize,
+        settingsVisible,
+        setSettingsVisible,
+        showCollectionTitles,
+        setShowCollectionTitles,
       }}
     >
-      <Container>
-        <SettingsButton onClick={() => setPanelVisible(!panelVisible)}>
-          {panelVisible ? "hide" : "show"} settings
-        </SettingsButton>
-        {panelVisible && <PickersPanel />}
-        <NFTGallery />
-      </Container>
+      <ModalContext.Provider value={{ modalItem, setModalItem }}>
+        <Container>
+          <NFTItemModal />
+          <NFTGallery />
+        </Container>
+      </ModalContext.Provider>
     </GalleryContext.Provider>
   );
 }
@@ -122,8 +134,4 @@ const Container = styled.div`
 
   width: 100%;
   height: 100%;
-`;
-
-const SettingsButton = styled.button`
-  margin-left: 1em;
 `;
