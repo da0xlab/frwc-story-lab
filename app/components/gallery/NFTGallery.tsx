@@ -41,7 +41,10 @@ function NFTGallery() {
   return (
     <>
       {displayMode !== GalleryDisplayMode.Slideshow && (
-        <SettingsButton onClick={() => setSettingsVisible(!settingsVisible)}>
+        <SettingsButton
+          $sticky={settingsVisible}
+          onClick={() => setSettingsVisible(!settingsVisible)}
+        >
           {settingsVisible ? "Hide" : "Show"} Settings
         </SettingsButton>
       )}
@@ -73,9 +76,10 @@ function NFTGallery() {
   );
 }
 
-const SettingsButton = styled.button`
-  margin-left: 1em;
-  z-index: 2;
+const SettingsButton = styled.button<{ $sticky: boolean }>`
+  position: ${(props) => (props.$sticky ? "fixed" : "relative")};
+  margin: 1em;
+  z-index: 1;
 `;
 
 export default NFTGallery;

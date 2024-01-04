@@ -43,7 +43,7 @@ export default NFTItemModal;
 
 const Container = styled.div`
   position: fixed;
-  z-index: 1;
+  z-index: 2;
   left: 0;
   top: 0;
   width: 100%;
@@ -69,7 +69,7 @@ const Item = styled.div`
   flex-direction: row;
   align-items: start;
   justify-content: space-between;
-  overflow: scroll;
+  overflow-y: auto;
 
   gap: 1em;
 

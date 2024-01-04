@@ -31,7 +31,7 @@ const Container = styled.div`
   backdrop-filter: blur(8px);
 
   width: 100%;
-  padding: 1em;
+  padding: 2em;
   gap: 2em;
 
   flex-wrap: wrap;
