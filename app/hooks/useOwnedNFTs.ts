@@ -7,18 +7,45 @@ export const soulsAddress = "0x251b5F14A825C537ff788604eA1b58e49b70726f";
 export const poniesAddress = "0xf55b615b479482440135ebf1b907fd4c37ed9420";
 export const spawnAddress = "0x7de11a2d9e9727fa5ead3094e40211c5e9cf5857";
 export const veilAddress = "0x31158181b4b91a423bfdc758fc3bf8735711f9c5";
+export const locksAddress = "0xda5cf3a42ebacd2d8fcb53830b1025e01d37832d";
 export const ringsAddress = "0x5d4aa6ff9de7963ead5a17b454dc1093ca9e98e7";
+export const impBoxAddres = "0x59775fd5f266c216d7566eb216153ab8863c9c84";
 export const athenaeumAddress = "0x7c104b4db94494688027cced1e2ebfb89642c80f";
-
-export const defaultCollections = [
+export const officialCollections = [
   wizardsAddress,
-  warriorsAddress,
   soulsAddress,
+  warriorsAddress,
   poniesAddress,
   spawnAddress,
   veilAddress,
-  ringsAddress,
+  impBoxAddres,
+  locksAddress,
   athenaeumAddress,
+  ringsAddress,
+];
+
+export const wizardNounsAddress = "0x5a79182165a2917eF9CcCF33f472FE22afffeff8";
+export const babyWizardsAddress = "0x4b1e130ae84c97b931ffbe91ead6b1da16993d45";
+export const wizardPunks = "0x4addac15971ab60ead954b8f15a67518730450e0";
+export const soulPunks = "0x1568d960941cdD203844661161bFE38253d39aA6";
+export const spellsAddress = "0x41efBCe86158f2A54368Fe5CE80ce1d496AcAa5E";
+export const cumberlandAddress = "0x4bce2bf108599257f84e0b1965631132a579481b";
+export const barrenCourtAddress = "0x4715be0c5e9bcfe1382da60cff69096af4c4eef4";
+export const blacksandAddress = "0xf486f696b80164b5943191236eca114f4efab2ff";
+export const communityCollections = [
+  wizardNounsAddress,
+  babyWizardsAddress,
+  wizardPunks,
+  soulPunks,
+  spellsAddress,
+  cumberlandAddress,
+  blacksandAddress,
+  barrenCourtAddress,
+];
+
+export const defaultCollections = [
+  ...officialCollections,
+  // ...communityCollections,
 ];
 
 export type NFT = OwnedNft & { owner: string };

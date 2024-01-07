@@ -49,4 +49,5 @@ const Container = styled.div`
   flex-direction: column;
   align-items: start;
   justify-content: start;
+  flex-wrap: wrap;
 `;

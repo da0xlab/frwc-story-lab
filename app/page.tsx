@@ -6,7 +6,11 @@ import { useSearchParams } from "next/navigation";
 import styled from "styled-components";
 
 import { GalleryContext, GalleryDisplayMode } from "./contexts/GalleryContext";
-import useOwnedNFTs, { NFT, defaultCollections } from "./hooks/useOwnedNFTs";
+import useOwnedNFTs, {
+  NFT,
+  defaultCollections,
+  officialCollections,
+} from "./hooks/useOwnedNFTs";
 import PickersPanel from "./components/pickers/PickersPanel";
 import { NftContractForNft } from "alchemy-sdk";
 import NFTGallery from "./components/gallery/NFTGallery";
@@ -27,9 +31,6 @@ export default function Index() {
     GalleryDisplayMode.ByCollection;
   // Wallet(s)
   let walletAddrs = searchParams.getAll("wallet");
-  if (walletAddrs.length === 0) {
-    walletAddrs = [];
-  }
 
   // Load saved wallets
   const { savedWallets } = useSavedWallets();
@@ -37,9 +38,9 @@ export default function Index() {
   // Display mode
   const [selectedDisplayMode, setDisplayMode] = useState(display);
   // All wallets
-  const [allWallets, setAllWallets] = useState<string[]>([]);
+  const [allWallets, setAllWallets] = useState(walletAddrs);
   // Selected wallets to display
-  const [selectedWallets, setSelectedWallets] = useState<string[]>([]);
+  const [selectedWallets, setSelectedWallets] = useState(walletAddrs);
   // Selected collections to display
   const [selectedCollections, setSelectedCollections] = useState<string[]>([]);
   // Item size in gallery
@@ -59,7 +60,10 @@ export default function Index() {
 
   // Handle when we get saved wallets from local storage
   useEffect(() => {
-    setAllWallets([...walletAddrs, ...savedWallets]);
+    if (walletAddrs.length === 0) {
+      const newAllWallets = [...walletAddrs, ...savedWallets];
+      setAllWallets(newAllWallets);
+    }
   }, [savedWallets]);
 
   // Fetch portfolio
@@ -81,7 +85,11 @@ export default function Index() {
           : -1
       );
     setOwnedCollections(ownedCollections);
-    setSelectedCollections(ownedCollections.map((c) => c.address));
+    setSelectedCollections(
+      ownedCollections
+        .map((c) => c.address)
+        .filter((a) => officialCollections.includes(a))
+    );
   }, [tokens]);
 
   if (isLoading) {

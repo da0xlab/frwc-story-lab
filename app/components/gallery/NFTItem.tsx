@@ -1,5 +1,6 @@
 import { useModalContext } from "@/app/contexts/ModalContext";
 import { NFT } from "@/app/hooks/useOwnedNFTs";
+import { NftTokenType } from "alchemy-sdk";
 import styled from "styled-components";
 
 const NFTItem = ({ width, nft }: { width?: number | undefined; nft: NFT }) => {
@@ -11,17 +12,28 @@ const NFTItem = ({ width, nft }: { width?: number | undefined; nft: NFT }) => {
   }
 
   return (
-    <ItemIcon
-      src={image}
-      $itemWidth={width}
-      onClick={() => {
-        setModalItem(nft);
-      }}
-    />
+    <Containter>
+      <ItemIcon
+        src={image}
+        $itemWidth={width}
+        onClick={() => {
+          setModalItem(nft);
+        }}
+      />
+      {parseInt(nft.balance) > 1 && (
+        <Count>
+          <CountLabel>{nft.balance}</CountLabel>
+        </Count>
+      )}
+    </Containter>
   );
 };
 
 export default NFTItem;
+
+const Containter = styled.div`
+  /* position: relative; */
+`;
 
 const ItemIcon = styled.img<{ $itemWidth: number | undefined }>`
   cursor: pointer;
@@ -32,4 +44,17 @@ const ItemIcon = styled.img<{ $itemWidth: number | undefined }>`
   object-fit: contain;
   image-rendering: pixelated;
   aspect-ratio: 1;
+`;
+
+const Count = styled.div`
+  position: absolute;
+  top: 0.2em;
+  right: 0.2em;
+
+  background-color: #00000099;
+`;
+
+const CountLabel = styled.div`
+  padding: 0.5em;
+  color: #ccc;
 `;
