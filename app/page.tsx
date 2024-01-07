@@ -61,8 +61,8 @@ export default function Index() {
   // Handle when we get saved wallets from local storage
   useEffect(() => {
     if (walletAddrs.length === 0) {
-      const newAllWallets = [...walletAddrs, ...savedWallets];
-      setAllWallets(newAllWallets);
+      setAllWallets(savedWallets);
+      setSelectedWallets(savedWallets);
     }
   }, [savedWallets]);
 
