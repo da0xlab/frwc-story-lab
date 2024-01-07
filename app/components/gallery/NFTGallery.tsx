@@ -38,16 +38,27 @@ function NFTGallery() {
         : 1
     );
 
+  function share() {
+    const query = new URLSearchParams();
+    selectedWallets.forEach((wallet) => query.append("wallet", wallet));
+    query.append("display", displayMode);
+    query.append("size", itemSize.toString());
+    open(`?${query.toString()}`);
+  }
+
   return (
     <>
-      {displayMode !== GalleryDisplayMode.Slideshow && (
-        <SettingsButton
-          $sticky={settingsVisible}
-          onClick={() => setSettingsVisible(!settingsVisible)}
-        >
-          {settingsVisible ? "Hide" : "Show"} Settings
-        </SettingsButton>
-      )}
+      <ButtonsPanel>
+        {displayMode !== GalleryDisplayMode.Slideshow && (
+          <SettingsButton
+            $sticky={settingsVisible}
+            onClick={() => setSettingsVisible(!settingsVisible)}
+          >
+            {settingsVisible ? "Hide" : "Show"} Settings
+          </SettingsButton>
+        )}
+        <ShareButton onClick={share}>Open share URL</ShareButton>
+      </ButtonsPanel>
       {settingsVisible && <PickersPanel />}
 
       {displayMode === GalleryDisplayMode.Combined && (
@@ -76,10 +87,22 @@ function NFTGallery() {
   );
 }
 
+const ButtonsPanel = styled.div`
+  width: 100vw;
+  display: flex;
+  flex-direction: row;
+  justify-items: stretch;
+  justify-content: space-between;
+`;
+
 const SettingsButton = styled.button<{ $sticky: boolean }>`
-  position: ${(props) => (props.$sticky ? "fixed" : "relative")};
   margin: 1em;
+  position: ${(props) => (props.$sticky ? "fixed" : "relative")};
   z-index: 1;
+`;
+
+const ShareButton = styled.button`
+  margin: 1em;
 `;
 
 export default NFTGallery;
