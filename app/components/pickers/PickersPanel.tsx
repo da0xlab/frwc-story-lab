@@ -37,6 +37,8 @@ const Container = styled.div`
   flex-wrap: wrap;
 
   position: fixed;
+
+  z-index: 1;
 `;
 
 const HStack = styled.div`

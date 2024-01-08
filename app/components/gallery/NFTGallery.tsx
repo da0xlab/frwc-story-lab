@@ -98,7 +98,7 @@ const ButtonsPanel = styled.div`
 const SettingsButton = styled.button<{ $sticky: boolean }>`
   margin: 1em;
   position: ${(props) => (props.$sticky ? "fixed" : "relative")};
-  z-index: 1;
+  z-index: 2;
 `;
 
 const ShareButton = styled.button`

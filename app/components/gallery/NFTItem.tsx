@@ -20,7 +20,7 @@ const NFTItem = ({ width, nft }: { width?: number | undefined; nft: NFT }) => {
           setModalItem(nft);
         }}
       />
-      {parseInt(nft.balance) > 1 && (
+      {nft.tokenType === NftTokenType.ERC1155 && (
         <Count>
           <CountLabel>{nft.balance}</CountLabel>
         </Count>
@@ -32,7 +32,7 @@ const NFTItem = ({ width, nft }: { width?: number | undefined; nft: NFT }) => {
 export default NFTItem;
 
 const Containter = styled.div`
-  /* position: relative; */
+  position: relative;
 `;
 
 const ItemIcon = styled.img<{ $itemWidth: number | undefined }>`
