@@ -48,17 +48,17 @@ function NFTGallery() {
 
   return (
     <>
-      <ButtonsPanel>
-        {displayMode !== GalleryDisplayMode.Slideshow && (
+      {displayMode !== GalleryDisplayMode.Slideshow && (
+        <ButtonsPanel>
           <SettingsButton
             $sticky={settingsVisible}
             onClick={() => setSettingsVisible(!settingsVisible)}
           >
             {settingsVisible ? "Hide" : "Show"} Settings
           </SettingsButton>
-        )}
-        <ShareButton onClick={share}>Open share URL</ShareButton>
-      </ButtonsPanel>
+          <ShareButton onClick={share}>Open share URL</ShareButton>
+        </ButtonsPanel>
+      )}
       {settingsVisible && <PickersPanel />}
 
       {displayMode === GalleryDisplayMode.Combined && (

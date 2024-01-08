@@ -5,40 +5,73 @@ import {
 import styled from "styled-components";
 
 function DisplayModePicker() {
-  const { displayMode, setDisplayMode, setSettingsVisible } = useGalleryContext();
+  const {
+    displayMode,
+    setDisplayMode,
+    setSettingsVisible,
+    showCollectionTitles,
+    setShowCollectionTitles,
+  } = useGalleryContext();
 
   function handleOnChange(displayMode: GalleryDisplayMode) {
     setDisplayMode(displayMode);
-    if(displayMode === GalleryDisplayMode.Slideshow) {
+    if (displayMode === GalleryDisplayMode.Slideshow) {
       setSettingsVisible(false);
     }
   }
 
+  function toggleShowCollectionAddresses() {
+    setShowCollectionTitles(!showCollectionTitles);
+  }
+
   return (
-    <Container>
+    <>
       <h3>Display:</h3>
-      {Object.values(GalleryDisplayMode).map((m) => {
-        return (
-          <label key={m}>
+      <Container>
+        <DisplayModes>
+          {Object.values(GalleryDisplayMode).map((m) => {
+            return (
+              <label key={m}>
+                <input
+                  type="radio"
+                  value={m}
+                  checked={displayMode === m}
+                  onChange={() => {
+                    handleOnChange(m as GalleryDisplayMode);
+                  }}
+                />
+                {m}
+              </label>
+            );
+          })}
+        </DisplayModes>
+
+        {displayMode === GalleryDisplayMode.ByCollection && (
+          <label>
             <input
-              type="radio"
-              value={m}
-              checked={displayMode === m}
-              onChange={() => {
-                handleOnChange(m as GalleryDisplayMode);
-              }}
+              type="checkbox"
+              checked={showCollectionTitles}
+              onChange={toggleShowCollectionAddresses}
             />
-            {m}
+            Show collection names
           </label>
-        );
-      })}
-    </Container>
+        )}
+      </Container>
+    </>
   );
 }
 
 export default DisplayModePicker;
 
 const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  justify-content: start;
+  gap: 1em;
+`;
+
+const DisplayModes = styled.div`
   display: flex;
   flex-direction: column;
   align-items: start;

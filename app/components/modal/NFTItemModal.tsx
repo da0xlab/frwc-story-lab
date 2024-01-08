@@ -101,7 +101,6 @@ const VStack = styled.div`
   align-items: stretch;
   justify-content: stretch;
   gap: 1em;
-  /* width: 50%; */
   height: 100%;
 `;
 
