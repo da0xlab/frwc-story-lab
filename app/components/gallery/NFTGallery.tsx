@@ -32,12 +32,8 @@ function NFTGallery() {
         selectedCollections.includes(t.contract.address)
     )
     .sort((a, b) =>
-      defaultCollections
-        .map((a) => a.toLowerCase())
-        .indexOf(b.contract.address.toLowerCase()) >
-      defaultCollections
-        .map((a) => a.toLowerCase())
-        .indexOf(a.contract.address.toLowerCase())
+      defaultCollections.indexOf(b.contract.address) >
+      defaultCollections.indexOf(a.contract.address)
         ? -1
         : 1
     );

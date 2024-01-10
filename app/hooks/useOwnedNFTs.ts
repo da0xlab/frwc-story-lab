@@ -4,13 +4,13 @@ import { useEffect, useState } from "react";
 export const warriorsAddress = "0x9690b63Eb85467BE5267A3603f770589Ab12Dc95";
 export const wizardsAddress = "0x521f9C7505005CFA19A8E5786a9c3c9c9F5e6f42";
 export const soulsAddress = "0x251b5F14A825C537ff788604eA1b58e49b70726f";
-export const poniesAddress = "0xf55b615b479482440135ebf1b907fd4c37ed9420";
-export const spawnAddress = "0x7de11a2d9e9727fa5ead3094e40211c5e9cf5857";
-export const veilAddress = "0x31158181b4b91a423bfdc758fc3bf8735711f9c5";
-export const locksAddress = "0xda5cf3a42ebacd2d8fcb53830b1025e01d37832d";
-export const ringsAddress = "0x5d4aa6ff9de7963ead5a17b454dc1093ca9e98e7";
-export const impBoxAddres = "0x59775fd5f266c216d7566eb216153ab8863c9c84";
-export const athenaeumAddress = "0x7c104b4db94494688027cced1e2ebfb89642c80f";
+export const poniesAddress = "0xf55b615B479482440135Ebf1b907fD4c37eD9420";
+export const spawnAddress = "0x7de11a2d9E9727fa5eAd3094E40211C5e9cf5857";
+export const veilAddress = "0x31158181b4b91A423bfDC758fC3bf8735711f9C5";
+export const locksAddress = "0xDa5cF3a42ebaCd2d8fcb53830b1025E01D37832D";
+export const ringsAddress = "0x5d4aA6fF9de7963eAD5a17B454dc1093ca9E98E7";
+export const impBoxAddres = "0x59775fD5F266C216D7566eB216153aB8863C9c84";
+export const athenaeumAddress = "0x7C104b4db94494688027CcED1E2EBFb89642C80F";
 export const officialCollections = [
   wizardsAddress,
   soulsAddress,
@@ -121,11 +121,9 @@ function useOwnedNFTs(
         // Sort by preferred collection order
         .sort((a, b) =>
           defaultCollections
-            .map((a) => a.toLowerCase())
-            .indexOf(a.address.toLowerCase()) >
+            .indexOf(a.address) >
           defaultCollections
-            .map((a) => a.toLowerCase())
-            .indexOf(b.address.toLowerCase())
+            .indexOf(b.address)
             ? 1
             : -1
         );
