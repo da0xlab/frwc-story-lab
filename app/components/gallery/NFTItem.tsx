@@ -1,3 +1,4 @@
+import { useGalleryContext } from "@/app/contexts/GalleryContext";
 import { useModalContext } from "@/app/contexts/ModalContext";
 import { NFT } from "@/app/hooks/useOwnedNFTs";
 import { NftTokenType } from "alchemy-sdk";
@@ -5,6 +6,7 @@ import styled from "styled-components";
 
 const NFTItem = ({ width, nft }: { width?: number | undefined; nft: NFT }) => {
   const { setModalItem } = useModalContext();
+  const { itemSize } = useGalleryContext();
   const image = nft?.image.originalUrl;
 
   if (!image) {
@@ -20,9 +22,9 @@ const NFTItem = ({ width, nft }: { width?: number | undefined; nft: NFT }) => {
           setModalItem(nft);
         }}
       />
-      {nft.tokenType === NftTokenType.ERC1155 && (
-        <Count>
-          <CountLabel>{nft.balance}</CountLabel>
+      {nft.tokenType === NftTokenType.ERC1155 && itemSize > 100 && (
+        <Count $itemWidth={width}>
+          <CountLabel $itemWidth={width}>{nft.balance}</CountLabel>
         </Count>
       )}
     </Containter>
@@ -46,15 +48,21 @@ const ItemIcon = styled.img<{ $itemWidth: number | undefined }>`
   aspect-ratio: 1;
 `;
 
-const Count = styled.div`
+const Count = styled.div<{ $itemWidth: number | undefined }>`
   position: absolute;
-  top: 0.2em;
-  right: 0.2em;
+  top: ${(props) => `${(props.$itemWidth ?? 0) / 15}px`};
+  right: ${(props) => `${(props.$itemWidth ?? 0) / 15}px`};
 
-  background-color: #00000099;
+  background-color: #00000055;
 `;
 
-const CountLabel = styled.div`
-  padding: 0.5em;
+const CountLabel = styled.div<{ $itemWidth: number | undefined }>`
   color: #ccc;
+
+  padding-left: ${(props) => `${(props.$itemWidth ?? 0) / 15}px`};
+  padding-right: ${(props) => `${(props.$itemWidth ?? 0) / 15}px`};
+  padding-top: ${(props) => `${(props.$itemWidth ?? 0) / 30}px`};
+  padding-bottom: ${(props) => `${(props.$itemWidth ?? 0) / 30}px`};
+  
+  font-size: ${(props) => `${(props.$itemWidth ?? 0) / 10}px`};
 `;
