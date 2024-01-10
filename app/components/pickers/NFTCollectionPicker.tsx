@@ -6,7 +6,7 @@ function NFTCollectionPicker() {
   const {
     ownedCollections,
     selectedCollections,
-    setSelectedCollections: setSelectedCollections,
+    setSelectedCollections,
   } = useGalleryContext();
 
   function handleOnChange(collection: NftContractForNft) {

@@ -38,8 +38,8 @@ const Containter = styled.div`
 const ItemIcon = styled.img<{ $itemWidth: number | undefined }>`
   cursor: pointer;
 
-  width: ${(props) => (props.$itemWidth ? `${props.$itemWidth}px` : "100%")};
-  height: ${(props) => (props.$itemWidth ? `${props.$itemWidth}px` : "100%")};
+  width: ${(props) => (props.$itemWidth ? `${props.$itemWidth}px` : "100vh")};
+  height: ${(props) => (props.$itemWidth ? `${props.$itemWidth}px` : "100vh")};
 
   object-fit: contain;
   image-rendering: pixelated;

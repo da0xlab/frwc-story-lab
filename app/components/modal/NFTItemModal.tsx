@@ -77,9 +77,7 @@ const Item = styled.div`
   border-color: #333;
 `;
 
-const Title = styled.div`
-  font-size: 2em;
-`;
+const Title = styled.h2``;
 
 const Subtitle = styled.h3`
   font-size: 1em;

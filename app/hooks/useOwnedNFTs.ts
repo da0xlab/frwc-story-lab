@@ -1,4 +1,4 @@
-import { Alchemy, Network, OwnedNft } from "alchemy-sdk";
+import { Alchemy, Network, NftContractForNft, OwnedNft } from "alchemy-sdk";
 import { useEffect, useState } from "react";
 
 export const warriorsAddress = "0x9690b63Eb85467BE5267A3603f770589Ab12Dc95";
@@ -97,6 +97,7 @@ async function fetchTokensByContract(
       parseInt(a.tokenId) < parseInt(b.tokenId) ? -1 : 1
     );
   }
+
   return tokensByContract;
 }
 
@@ -105,6 +106,7 @@ function useOwnedNFTs(
   contractAddresses: string[] | undefined
 ) {
   const [tokens, setTokens] = useState<NFTsByContract>({});
+  const [collections, setCollections] = useState<NftContractForNft[]>([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -114,13 +116,27 @@ function useOwnedNFTs(
         ownerAddresses,
         contractAddresses
       );
+      const ownedCollections = Object.values(data)
+        .flatMap((t) => (t[0].contract ? t[0].contract : []))
+        // Sort by preferred collection order
+        .sort((a, b) =>
+          defaultCollections
+            .map((a) => a.toLowerCase())
+            .indexOf(a.address.toLowerCase()) >
+          defaultCollections
+            .map((a) => a.toLowerCase())
+            .indexOf(b.address.toLowerCase())
+            ? 1
+            : -1
+        );
+      setCollections(ownedCollections);
       setTokens(data);
       setLoading(false);
     }
     getNFTs();
   }, [ownerAddresses, contractAddresses]);
 
-  return { tokens, isLoading: loading };
+  return { tokens, collections, isLoading: loading };
 }
 
 export default useOwnedNFTs;

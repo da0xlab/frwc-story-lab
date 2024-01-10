@@ -6,13 +6,7 @@ import { useSearchParams } from "next/navigation";
 import styled from "styled-components";
 
 import { GalleryContext, GalleryDisplayMode } from "./contexts/GalleryContext";
-import useOwnedNFTs, {
-  NFT,
-  defaultCollections,
-  officialCollections,
-} from "./hooks/useOwnedNFTs";
-import PickersPanel from "./components/pickers/PickersPanel";
-import { NftContractForNft } from "alchemy-sdk";
+import useOwnedNFTs, { NFT, defaultCollections } from "./hooks/useOwnedNFTs";
 import NFTGallery from "./components/gallery/NFTGallery";
 import { ModalContext } from "./contexts/ModalContext";
 import NFTItemModal from "./components/modal/NFTItemModal";
@@ -42,21 +36,16 @@ export default function Index() {
   // Selected wallets to display
   const [selectedWallets, setSelectedWallets] = useState(walletAddrs);
   // Selected collections to display
-  const [selectedCollections, setSelectedCollections] = useState<string[]>([]);
+  const [selectedCollections, setSelectedCollections] =
+    useState<string[]>(defaultCollections);
   // Item size in gallery
   const [itemSize, setItemSize] = useState(width);
   // Collection titles
   const [showCollectionTitles, setShowCollectionTitles] = useState(false);
   // Pickers Panel visibility, visible on load if no wallet(s)
-  const [settingsVisible, setSettingsVisible] = useState(
-    selectedWallets.length === 0
-  );
+  const [settingsVisible, setSettingsVisible] = useState(true);
   // Item Modal
   const [modalItem, setModalItem] = useState<NFT | undefined>(undefined);
-  // Collections owned by all wallets
-  const [ownedCollections, setOwnedCollections] = useState<NftContractForNft[]>(
-    []
-  );
 
   // Handle when we get saved wallets from local storage
   useEffect(() => {
@@ -64,33 +53,13 @@ export default function Index() {
       setAllWallets(savedWallets);
       setSelectedWallets(savedWallets);
     }
-  }, [savedWallets]);
+  }, [savedWallets, walletAddrs]);
 
   // Fetch portfolio
-  const { tokens, isLoading } = useOwnedNFTs(allWallets, defaultCollections);
-
-  // Process owned NFTs
-  useEffect(() => {
-    const ownedCollections = Object.values(tokens)
-      .flatMap((t) => (t[0].contract ? t[0].contract : []))
-      // Sort by preferred collection order
-      .sort((a, b) =>
-        defaultCollections
-          .map((a) => a.toLowerCase())
-          .indexOf(a.address.toLowerCase()) >
-        defaultCollections
-          .map((a) => a.toLowerCase())
-          .indexOf(b.address.toLowerCase())
-          ? 1
-          : -1
-      );
-    setOwnedCollections(ownedCollections);
-    setSelectedCollections(
-      ownedCollections
-        .map((c) => c.address)
-        .filter((a) => officialCollections.includes(a))
-    );
-  }, [tokens]);
+  const { tokens, collections, isLoading } = useOwnedNFTs(
+    allWallets,
+    defaultCollections
+  );
 
   if (isLoading) {
     return (
@@ -111,7 +80,7 @@ export default function Index() {
         setAllWallets,
         selectedCollections,
         setSelectedCollections,
-        ownedCollections,
+        ownedCollections: collections,
         ownedNFTs: tokens,
         itemSize,
         setItemSize,

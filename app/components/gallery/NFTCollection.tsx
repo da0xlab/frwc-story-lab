@@ -11,6 +11,10 @@ const NFTCollection = ({
   nfts: NFT[];
   title?: string;
 }) => {
+  if(nfts.length === 0) {
+    return null;
+  }
+  
   return (
     <Container>
       {title && <Title>{title}</Title>}

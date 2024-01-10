@@ -12,6 +12,7 @@ function NFTGallery() {
   const {
     displayMode,
     ownedNFTs,
+    ownedCollections,
     itemSize,
     selectedWallets,
     selectedCollections,
@@ -20,6 +21,9 @@ function NFTGallery() {
     showCollectionTitles,
   } = useGalleryContext();
 
+  const collectionsToDisplay = ownedCollections
+    .map((c) => c.address)
+    .filter((a) => selectedCollections.includes(a));
   const tokensToDisplay = Object.values(ownedNFTs)
     .flat()
     .filter(
@@ -65,7 +69,7 @@ function NFTGallery() {
         <NFTCollection nfts={tokensToDisplay} itemWidth={itemSize} />
       )}
       {displayMode === GalleryDisplayMode.ByCollection &&
-        selectedCollections.map((collectionAddress) => {
+        collectionsToDisplay.map((collectionAddress) => {
           const tokens = tokensToDisplay.filter(
             (nft) => nft.contract.address === collectionAddress
           );
