@@ -1,7 +1,8 @@
 import { useModalContext } from "@/app/contexts/ModalContext";
-import { NFTMetaData } from "@/app/hooks/useOwnedNFTs";
+import {
+  NFTMetaData,
+} from "@/app/hooks/useOwnedNFTs";
 import styled from "styled-components";
-import NFTItem from "../gallery/NFTItem";
 
 const NFTItemModal = () => {
   const { modalItem, setModalItem } = useModalContext();
@@ -10,7 +11,8 @@ const NFTItemModal = () => {
     return null;
   }
 
-  const meta = modalItem.raw.metadata as NFTMetaData;
+  const metadata = modalItem.raw.metadata as NFTMetaData;
+  const animationUrl = modalItem.raw.metadata.animation_url;
 
   return (
     <Container
@@ -20,14 +22,17 @@ const NFTItemModal = () => {
     >
       <Item>
         <VStack>
-          <NFTImage src={modalItem?.image.originalUrl} />
+          {animationUrl && (
+            <NFTDynamicItem src={modalItem.raw.metadata.animation_url} />
+          )}
+          {!animationUrl && <NFTImage src={modalItem?.image.originalUrl} />}
           <Title>
-            #{modalItem?.tokenId} - {meta.name}
+            #{modalItem?.tokenId} - {metadata.name}
           </Title>
           <Subtitle>{modalItem.collection?.name}</Subtitle>
         </VStack>
         <HStack>
-          {meta.attributes.map((attr) => (
+          {metadata.attributes.map((attr) => (
             <Trait key={attr.trait_type}>
               <TraitType>{attr.trait_type.toUpperCase()}</TraitType>
               <TraitValue>{attr.value}</TraitValue>
@@ -100,6 +105,11 @@ const VStack = styled.div`
   justify-content: stretch;
   gap: 1em;
   height: 100%;
+`;
+
+const NFTDynamicItem = styled.iframe`
+  width: 50vw;
+  height: 70vh;
 `;
 
 const NFTImage = styled.img`
