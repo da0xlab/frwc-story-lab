@@ -21,7 +21,6 @@ export const officialCollections = [
   impBoxAddres,
   locksAddress,
   athenaeumAddress,
-  ringsAddress,
 ];
 
 export const wizardNounsAddress = "0x5a79182165a2917eF9CcCF33f472FE22afffeff8";
@@ -41,6 +40,20 @@ export const communityCollections = [
   cumberlandAddress,
   blacksandAddress,
   barrenCourtAddress,
+];
+
+export const watchersRingsAddress = "0x0e5bf9df365f7bf2c9514524ffcbd52b195d1a38";
+export const LAandAddress = "0x775f0a0bb8258501d0862df38a7f7ad8f8f7423d";
+export const roninCollections = [
+  watchersRingsAddress,
+  LAandAddress,
+];
+
+export const characterCollections = [
+  warriorsAddress,
+  wizardsAddress,
+  soulsAddress,
+  poniesAddress,
 ];
 
 export const defaultCollections = [
@@ -83,7 +96,9 @@ async function fetchTokensByContract(
       allNFTs.push(...nfts.ownedNfts);
     }
     allNFTs.forEach((nft) => {
-      const ownedNFT = { ...nft, owner: wallet };
+      const isCharacter = characterCollections.includes(nft.contract.address);
+      const isObject = nft.contract.address === athenaeumAddress;
+      const ownedNFT = { ...nft, owner: wallet, isCharacter, isObject };
       if (tokensByContract[nft.contract.address]) {
         tokensByContract[nft.contract.address].push(ownedNFT);
       } else {

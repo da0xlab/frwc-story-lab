@@ -6,6 +6,8 @@ import {
 import NFTCollection from "./NFTCollection";
 import NFTSlideShow from "./NFTSlideshow";
 import styled from "styled-components";
+import { useState } from "react";
+import StoryBuilder from "./StoryBuilder";
 import PickersPanel from "../pickers/PickersPanel";
 
 function NFTGallery() {
@@ -20,6 +22,8 @@ function NFTGallery() {
     setSettingsVisible,
     showCollectionTitles,
   } = useGalleryContext();
+
+  const [isStoryBuilderActive, setIsStoryBuilderActive] = useState(false);
 
   const collectionsToDisplay = ownedCollections
     .map((c) => c.address)
@@ -46,23 +50,45 @@ function NFTGallery() {
     open(`?${query.toString()}`);
   }
 
+  const handleDragStart = (e: any, nft: any) => {
+    e.dataTransfer.setData("nft", JSON.stringify(nft));
+  };
+
+  // Filter to only include NFTs where isCharacter is true
+  const availableCharacters = Object.values(ownedNFTs)
+  .flat()
+
+
   return (
     <>
-      {displayMode !== GalleryDisplayMode.Slideshow && (
+      {
         <ButtonsPanel>
+          {!settingsVisible && <StoryBuilderButton onClick={() => setIsStoryBuilderActive(!isStoryBuilderActive)}>
+            {isStoryBuilderActive ? "Close" : "Open"} Story Builder
+          </StoryBuilderButton>}
           <SettingsButton
             $sticky={settingsVisible}
             onClick={() => setSettingsVisible(!settingsVisible)}
           >
             {settingsVisible ? "Hide" : "Show"} Settings
-          </SettingsButton>
-          <ShareButton onClick={share}>Open share URL</ShareButton>
+          </SettingsButton>          
         </ButtonsPanel>
-      )}
+      }
       {settingsVisible && <PickersPanel />}
 
+      {isStoryBuilderActive && <StoryBuilder availableCharacters={availableCharacters} />}
       {displayMode === GalleryDisplayMode.Combined && (
-        <NFTCollection nfts={tokensToDisplay} itemWidth={itemSize} />
+        <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+          {tokensToDisplay.map((nft, index) => (
+            <div
+              key={`${nft.contract.address}-${index}`} // Ensure each NFT has a unique key
+              draggable
+              onDragStart={(e) => handleDragStart(e, nft)}
+            >
+              <NFTCollection nfts={[nft]} itemWidth={itemSize} />
+            </div>
+          ))}
+        </div>
       )}
       {displayMode === GalleryDisplayMode.ByCollection &&
         collectionsToDisplay.map((collectionAddress) => {
@@ -70,39 +96,64 @@ function NFTGallery() {
             (nft) => nft.contract.address === collectionAddress
           );
           return (
-            <NFTCollection
-              title={
-                showCollectionTitles ? tokens[0]?.collection?.name : undefined
-              }
-              nfts={tokens}
-              key={collectionAddress}
-              itemWidth={itemSize}
-            />
+            <div key={`collection-${collectionAddress}`} style={{ display: 'flex', flexWrap: 'wrap' }}>
+              {tokens.map((nft, index) => (
+                <div
+                  key={`${collectionAddress}-${index}`} // Ensure each NFT has a unique key
+                  draggable
+                  onDragStart={(e) => handleDragStart(e, nft)}
+                >
+                  <NFTCollection
+                    title={showCollectionTitles ? nft.collection?.name : undefined}
+                    nfts={[nft]}
+                    itemWidth={itemSize}
+                  />
+                </div>
+              ))}
+            </div>
           );
         })}
-      {displayMode === GalleryDisplayMode.Slideshow && (
-        <NFTSlideShow nfts={tokensToDisplay} interval={1000} />
-      )}
+
+      
     </>
   );
 }
 
 const ButtonsPanel = styled.div`
   width: 100vw;
+  
   display: flex;
   flex-direction: row;
   justify-items: stretch;
   justify-content: space-between;
+
+  position: fixed;
+  z-index: 10;
+  background-color: black; /* Or any color that matches the gallery background */
+
 `;
 
 const SettingsButton = styled.button<{ $sticky: boolean }>`
   margin: 1em;
   position: ${(props) => (props.$sticky ? "fixed" : "relative")};
-  z-index: 2;
+  z-index: 3;
 `;
 
 const ShareButton = styled.button`
   margin: 1em;
+`;
+
+const StoryBuilderButton = styled.button`
+  margin: 1em;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 2px;
+  z-index: 3;
+  cursor: pointer;
+  &:hover {
+    background-color: #45a049;
+  }
 `;
 
 export default NFTGallery;

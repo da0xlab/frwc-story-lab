@@ -5,7 +5,7 @@ import { NFTsByContract } from "../hooks/useOwnedNFTs";
 export enum GalleryDisplayMode {
   ByCollection = "grouped",
   Combined = "flat",
-  Slideshow = "slideshow",
+  //Slideshow = "slideshow",
 }
 
 type GalleryContextType = {

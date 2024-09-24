@@ -15,9 +15,7 @@ function DisplayModePicker() {
 
   function handleOnChange(displayMode: GalleryDisplayMode) {
     setDisplayMode(displayMode);
-    if (displayMode === GalleryDisplayMode.Slideshow) {
-      setSettingsVisible(false);
-    }
+
   }
 
   function toggleShowCollectionAddresses() {
@@ -69,6 +67,7 @@ const Container = styled.div`
   align-items: start;
   justify-content: start;
   gap: 1em;
+  z-index: 2;
 `;
 
 const DisplayModes = styled.div`
