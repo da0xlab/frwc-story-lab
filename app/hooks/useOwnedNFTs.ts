@@ -98,7 +98,16 @@ async function fetchTokensByContract(
     allNFTs.forEach((nft) => {
       const isCharacter = characterCollections.includes(nft.contract.address);
       const isObject = nft.contract.address === athenaeumAddress;
-      const ownedNFT = { ...nft, owner: wallet, isCharacter, isObject };
+      // Public IPFS gateways can rate-limit browser image requests. Alchemy's
+      // cached image is served reliably and is already part of this NFT data.
+      const displayImage = nft.image.cachedUrl ?? nft.image.pngUrl ?? nft.image.thumbnailUrl ?? nft.image.originalUrl;
+      const ownedNFT = {
+        ...nft,
+        image: { ...nft.image, originalUrl: displayImage },
+        owner: wallet,
+        isCharacter,
+        isObject,
+      };
       if (tokensByContract[nft.contract.address]) {
         tokensByContract[nft.contract.address].push(ownedNFT);
       } else {
